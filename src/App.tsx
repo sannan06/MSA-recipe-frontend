@@ -1,15 +1,17 @@
 import * as React from 'react';
+import * as MaterialDesign from '@material-ui/core';
 import './App.css';
 
 interface IState {
-  recipeSearch: any,
   recipes: any[],
-  currentRecipe: any
 }
 
 class App extends React.Component<{}, IState> {
   constructor(props: any){
     super(props)
+    this.state = {
+      recipes: []
+    }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
   }
 
@@ -20,9 +22,17 @@ class App extends React.Component<{}, IState> {
           <h1 className="App-title">Recipe Search</h1>
         </header>
         <form onSubmit = {this.getRecipeSearch}>
-            <input type="text" id="recipe-search"/>
-            <button>Search</button>
+            <MaterialDesign.TextField type="text" id="recipe-search"/>
+            <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
+        { this.state.recipes.map((recipe) =>{
+          return (
+            <div key={ recipe.recipe_id }>
+              <img src={ recipe.image_url } alt={ recipe.title }/>
+              <p>{ recipe.title }</p>
+            </div>
+          )
+        }) }
       </div>
     );
   }
@@ -46,6 +56,7 @@ class App extends React.Component<{}, IState> {
     } else{
       url += "&count=12"
     }
+    console.log(url)
     const apiCall = await fetch(url)
     const data = await apiCall.json()
     this.setState({
