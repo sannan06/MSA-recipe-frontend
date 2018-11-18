@@ -1,16 +1,19 @@
 import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
+import Recipes from './components/Recipes';
 import './App.css';
 
 interface IState {
   recipes: any[],
+  open: boolean
 }
 
 class App extends React.Component<{}, IState> {
   constructor(props: any){
     super(props)
     this.state = {
-      recipes: []
+      recipes: [],
+      open: false
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
   }
@@ -22,17 +25,10 @@ class App extends React.Component<{}, IState> {
           <h1 className="App-title">Recipe Search</h1>
         </header>
         <form onSubmit = {this.getRecipeSearch}>
-            <MaterialDesign.TextField type="text" id="recipe-search"/>
+            <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }}/>
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
-        { this.state.recipes.map((recipe) =>{
-          return (
-            <div key={ recipe.recipe_id }>
-              <img src={ recipe.image_url } alt={ recipe.title }/>
-              <p>{ recipe.title }</p>
-            </div>
-          )
-        }) }
+        <Recipes recipes={ this.state.recipes }/>
       </div>
     );
   }
