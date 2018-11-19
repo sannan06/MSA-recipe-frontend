@@ -26,7 +26,7 @@ class App extends React.Component<{}, IState> {
           <h1 className="App-title">Recipe Search</h1>
           <AddRecipe />
         </header>
-        <form onSubmit = {this.getRecipeSearch}>
+        <form onSubmit = {this.getRecipeSearch} className="search-field">
             <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }}/>
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>

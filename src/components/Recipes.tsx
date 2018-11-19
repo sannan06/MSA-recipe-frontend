@@ -71,10 +71,12 @@ export default class Recipes extends React.Component<IProps, IState> {
         )
     }
     
+    // Modal open
     private handleClickOpen(e:any, index: any){
         this.setState({ open: index }) 
     }
 
+    // Modal close
     private handleClose = () => {
         this.setState({ open: null })
     }

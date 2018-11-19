@@ -17,15 +17,20 @@ button:focus {
 
 .App {
   text-align: center;
-  font: Roboto;
+  font-family: "Roboto";
 }
 
 .MuiInputBase-input-28{
   font-size: 16px !important;
 }
 
-.MuiButton-label-36{
-  font-size: 13px !important;
+.MuiButton-label-2{
+  font-size: 16px !important;
+  font-weight: 400;
+}
+
+.search-field {
+  margin-left: 2rem;
 }
 
 .App-header {
@@ -33,12 +38,14 @@ button:focus {
   height: 10%;
   padding: 10px;
   color: white;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 }
 
 .App-title {
-  font-size: 1.5em;
+  font-size: 50px;
   display: inline-block;
+  font-weight: 100;
+  letter-spacing: -1pt;
 }
 
 .dialog-box-text p{
@@ -60,12 +67,15 @@ button:focus {
 }
 
 .add-recipe-button {
-  color: white;
-  background-color: transparent;
-  outline: white;
-  float: right;
-  margin-right: 10px;
-  margin-top: 2rem;
+  color: white !important;
+}
+
+.add-recipe-header {
+  font-size: 24px !important;
+}
+
+.add-recipe-text {
+  font-size: 16px !important;
 }
 
 .recipes__title {
@@ -91,6 +101,32 @@ button:focus {
 
 input[type="text"] { 
   outline: none;
+  font-size: 16px;
+}
+
+.recipe-inputs input[type="text"] {
+  border: none;
+  border-bottom: 2px solid #4F2D7F;
+  display: block;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.recipe-inputs textarea {
+  width: 100%;
+  height: 150px;
+  margin-top: 2rem;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
+}
+
+input[type="file"] {
+  margin-top: 2rem;
+  font-size: 13px;
+  text-transform: capitalize;
 }
 
 input:-webkit-autofill {
