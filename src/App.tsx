@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
 import Recipes from './components/Recipes';
 import AddRecipe from './components/AddRecipe';
+import MediaStreamRecorder from 'msr';
 import './App.css';
 
 interface IState {
@@ -17,6 +18,7 @@ class App extends React.Component<{}, IState> {
       open: false
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
+    this.searchRecipesByVoice = this.searchRecipesByVoice.bind(this)
   }
 
   public render() {
@@ -28,6 +30,7 @@ class App extends React.Component<{}, IState> {
         </header>
         <form onSubmit = {this.getRecipeSearch} className="search-field">
             <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }}/>
+            <div className="btn" ><i className="fa fa-microphone" /></div>
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
         <Recipes recipes={ this.state.recipes }/>
@@ -66,6 +69,29 @@ class App extends React.Component<{}, IState> {
       alert("Bad Request")
     }
 
+  }
+
+  private searchRecipesByVoice () {
+
+    const mediaConstraints = {
+    audio: true
+    }
+
+    const onMediaSuccess = (stream: any) => {
+        const mediaRecorder = new MediaStreamRecorder(stream);
+        mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
+        mediaRecorder.ondataavailable = (blob: any) => {
+            // this.postAudio(blob);
+            mediaRecorder.stop()
+        }
+        mediaRecorder.start(3000);
+    }
+
+    navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
+
+    function onMediaError(e: any) {
+        console.error('media error', e);
+    }
   }
 
 }
