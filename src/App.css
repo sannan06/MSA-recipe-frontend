@@ -38,6 +38,12 @@ button:focus {
 
 .App-title {
   font-size: 1.5em;
+  display: inline-block;
+}
+
+.dialog-box-text p{
+  font-size: 15px;
+  margin-top: 2rem;
 }
 
 .recipes__box {
@@ -53,8 +59,17 @@ button:focus {
   margin-left: 15px;
 }
 
+.add-recipe-button {
+  color: white;
+  background-color: transparent;
+  outline: white;
+  float: right;
+  margin-right: 10px;
+  margin-top: 2rem;
+}
+
 .recipes__title {
-  color: #e74c3c;
+  color: #4F2D7F;
   text-transform: uppercase;
   /* font-size: 1.4rem; */
   padding: 1.8rem 0 0.2rem 0;

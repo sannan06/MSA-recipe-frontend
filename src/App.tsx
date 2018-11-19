@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
 import Recipes from './components/Recipes';
+import AddRecipe from './components/AddRecipe';
 import './App.css';
 
 interface IState {
@@ -23,6 +24,7 @@ class App extends React.Component<{}, IState> {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Recipe Search</h1>
+          <AddRecipe />
         </header>
         <form onSubmit = {this.getRecipeSearch}>
             <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }}/>
@@ -46,19 +48,24 @@ class App extends React.Component<{}, IState> {
 
   // Fetch recipes based on user search and using API
   private getRecipes = async (recipeSearch: any) => {
-    let url = 'https://www.food2fork.com/api/search?key=2ba83b7abd60e90277b69ee6bcfe8a5d'
+    let url = 'https://www.food2fork.com/api/search?key=0a96d0a56859b5e2c759d18bcccc097d'
     if (recipeSearch !== ""){
       url += "&q=" + recipeSearch + "&count=12"
     } else{
       url += "&count=12"
     }
-    console.log(url)
     const apiCall = await fetch(url)
     const data = await apiCall.json()
-    this.setState({
-      recipes: data.recipes
-    })
-    console.log(this.state.recipes)
+
+    // If API returns valid response (i.e. 12 recipes are returned)
+    if(data.count === 12){
+      this.setState({
+        recipes: data.recipes
+      })
+    } else{
+      alert("Bad Request")
+    }
+
   }
 
 }
