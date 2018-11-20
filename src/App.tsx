@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
 import Recipes from './components/Recipes';
 import AddRecipe from './components/AddRecipe';
-import MediaStreamRecorder from 'msr';
+// import MediaStreamRecorder from 'msr';
 import './App.css';
 
 interface IState {
@@ -19,6 +19,7 @@ class App extends React.Component<{}, IState> {
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
     this.searchRecipesByVoice = this.searchRecipesByVoice.bind(this)
+    this.getRecipes("")
   }
 
   public render() {
@@ -73,25 +74,25 @@ class App extends React.Component<{}, IState> {
 
   private searchRecipesByVoice () {
 
-    const mediaConstraints = {
-    audio: true
-    }
+    // const mediaConstraints = {
+    // audio: true
+    // }
 
-    const onMediaSuccess = (stream: any) => {
-        const mediaRecorder = new MediaStreamRecorder(stream);
-        mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
-        mediaRecorder.ondataavailable = (blob: any) => {
-            // this.postAudio(blob);
-            mediaRecorder.stop()
-        }
-        mediaRecorder.start(3000);
-    }
+    // const onMediaSuccess = (stream: any) => {
+    //     const mediaRecorder = new MediaStreamRecorder(stream);
+    //     mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
+    //     mediaRecorder.ondataavailable = (blob: any) => {
+    //         // this.postAudio(blob);
+    //         mediaRecorder.stop()
+    //     }
+    //     mediaRecorder.start(3000);
+    // }
 
-    navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
+    // navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
 
-    function onMediaError(e: any) {
-        console.error('media error', e);
-    }
+    // function onMediaError(e: any) {
+    //     console.error('media error', e);
+    // }
   }
 
 }

@@ -62,6 +62,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                 </DialogActions>      
                                 </Dialog>
                                  <Button>Edit Recipe</Button>
+                                 <Button>Delete</Button>
                              </div>
                          </div>
                      )

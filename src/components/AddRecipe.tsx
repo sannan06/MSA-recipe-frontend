@@ -92,7 +92,7 @@ class AddRecipe extends React.Component<{}, IState> {
         const publisherInput = document.getElementById("recipe-publisher-input") as HTMLInputElement
         const tagInput = document.getElementById("recipe-tag-input") as HTMLInputElement
         const recipeSteps = document.getElementById("recipe-steps") as HTMLInputElement
-        // const imageInput = this.state.uploadImage[0]
+        const imageInput = this.state.uploadImage[0]
 
         if(recipeTitle === null || publisherInput === null || tagInput === null) {
             return
@@ -102,13 +102,28 @@ class AddRecipe extends React.Component<{}, IState> {
         const tag = tagInput.value
         const publisher = publisherInput.value
         const steps = recipeSteps.value
+        const url = "https://recipe-bank-api.azurewebsites.net/api/recipe/upload"
 
-        console.log(title)
-        console.log(tag)
-        console.log(publisher)
-        console.log(steps)
+        const formData = new FormData()
+        formData.append("title", title)
+        formData.append("tag", tag)
+        formData.append("publisher", publisher)
+        formData.append("steps", steps)
+        formData.append("image_url", imageInput)
 
-        this.closeModal()
+        fetch(url, {
+            body: formData,
+            headers: {'cache-control': 'no-cache'},
+            method: 'POST'
+        })
+        .then((response : any) => {
+			if (!response.ok) {
+				// Error State
+				alert(response.statusText)
+			} else {
+				location.reload()
+			}
+		})
 
     }
 }
