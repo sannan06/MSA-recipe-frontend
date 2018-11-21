@@ -8,17 +8,22 @@ interface IProps{
 }
 
 interface IState{
-    open: any;
+    open: any,
+    editOpen: any,
 }
 
 export default class Recipes extends React.Component<IProps, IState> {
     constructor(props: any) {
         super(props)
         this.state = {
-            open: null
+            open: null,
+            editOpen: null
         }
         this.handleClickOpen = this.handleClickOpen.bind(this)
-        this.handleClose = this.handleClose.bind(this)   
+        this.handleClose = this.handleClose.bind(this)
+        this.openEditRecipe = this.openEditRecipe.bind(this)
+        this.closeEditRecipe = this.closeEditRecipe.bind(this)
+        this.updateRecipe = this.updateRecipe.bind(this)   
     }
 
     public render() {
@@ -28,7 +33,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                  <div className="row">
                    { this.props.recipes.map((recipe, index) =>{
                      return (
-                         <div key = { recipe.recipe_id } className="col-md-4" style={{ marginBottom: "2rem", marginTop: "2rem" }}>
+                         <div key = { recipe.id } className="col-md-4" style={{ marginBottom: "2rem", marginTop: "2rem" }}>
                              <div className="recipes__box">
                                  <img className="recipes__box-img" src={ recipe.image_url } alt={ recipe.title }/>
                                  <div className="recipe__text"> 
@@ -36,7 +41,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                      { recipe.title.length < 20 ? `${recipe.title}` : `${recipe.title.substring(0, 25)}...` } 
                                      </h5>
                                      <p className="recipes__subtitle">Publisher: <span>
-                                     { recipe.publisher < 20 ? `${recipe.publisher}` : `${recipe.publisher.substring(0, 25)}...`  }
+                                     { recipe.publisher }
                                      </span></p>
                                  </div>
                                  <Button onClick = {e => this.handleClickOpen(e, index)}>View Recipe</Button>
@@ -47,13 +52,15 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     aria-describedby="alert-dialog-description"
                                 >
                                 <DialogTitle id="alert-dialog-title">
-                                <h1 className="dialog-box-title">{recipe.title}</h1>
+                                <p className="recipe-header">{recipe.title}</p>
                                 </DialogTitle>
                                 <DialogContent className="dialog-box-text">
                                     <img src={ recipe.image_url } alt={ recipe.title }/>
                                     <DialogContentText>
-                                        <p>Published By: { recipe.publisher }</p>
+                                        Published By: { recipe.publisher }
                                     </DialogContentText>
+                                    <h2 className="steps-title">Steps:</h2>
+                                    <p>{ recipe.steps }</p>
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={this.handleClose} color="primary">
@@ -61,8 +68,34 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     </Button>
                                 </DialogActions>      
                                 </Dialog>
-                                 <Button>Edit Recipe</Button>
+
+                                 <Button onClick = {e => this.openEditRecipe(e, index)}>Edit Recipe</Button>
+                                 <Dialog
+                                    open={this.state.editOpen === index}
+                                    onClose = {this.closeEditRecipe}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                 >
+                                <DialogTitle id="alert-dialog-title">
+                                <p className="recipe-header">Edit Recipe</p>
+                                </DialogTitle>
+                                <DialogContent className="dialog-box-text">
+                                <DialogContentText className="add-recipe-text">Edit this recipe if you see any errors, or have a better way to make it!</DialogContentText>
+                                <div className="recipe-inputs">
+                                <input type = "text" id="recipe-title-edit" defaultValue={recipe.title}/>    
+                                <textarea placeholder="Enter steps here..." id="recipe-steps-edit" defaultValue={recipe.steps}></textarea>
+                                <DialogContentText className="add-recipe-text">Change the tag if needed: </DialogContentText>
+                                <input type = "text" id="recipe-tag-edit" defaultValue={recipe.tag}/>
+                                </div>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={e=>{this.updateRecipe(recipe)}} color="primary">
+                                        Update
+                                    </Button>
+                                </DialogActions>   
+                                 </Dialog>
                                  <Button>Delete</Button>
+
                              </div>
                          </div>
                      )
@@ -72,13 +105,67 @@ export default class Recipes extends React.Component<IProps, IState> {
         )
     }
     
-    // Modal open
+    // Dialog to view recipe open
     private handleClickOpen(e:any, index: any){
         this.setState({ open: index }) 
     }
 
-    // Modal close
+    // Dialog to close recipe 
     private handleClose = () => {
         this.setState({ open: null })
     }
+
+    // Dialog to edit recipe open
+    private openEditRecipe(e:any, index:any){
+        this.setState({
+            editOpen: index
+        })
+    }
+
+    // Close edit recipe dialog
+    private closeEditRecipe =() => {
+        this.setState({
+            editOpen: null
+        })
+    }
+
+    // Make PUT request
+    private updateRecipe(recipe: any) {
+        const titleInput = document.getElementById("recipe-title-edit") as HTMLInputElement
+        const tagInput = document.getElementById("recipe-tag-edit") as HTMLInputElement
+        const stepsInput = document.getElementById("recipe-steps-edit") as HTMLInputElement
+
+        if (titleInput === null || tagInput === null || stepsInput === null) {
+            return
+        }
+
+        const url = "https://recipe-bank-api.azurewebsites.net/api/recipe/" + recipe.id
+        const title = titleInput.value
+        const tag = tagInput.value
+        const steps = stepsInput.value
+
+        fetch(url, {
+            body: JSON.stringify({
+                "id" : recipe.id, 
+                "publisher" : recipe.publisher,
+                "title" : title,
+                "image_url" : recipe.image_url,
+                "steps" : steps,
+                "tag" : tag
+            }),
+            headers: {'cache-control':'no-cache', 'Content-type':'application/json'},
+            method: 'PUT'
+        })
+        .then((response : any) => {
+			if (!response.ok) {
+				// Error State
+				alert(response.statusText + " " + url)
+			} else {
+				location.reload()
+			}
+		})
+
+    }
+
+
 }

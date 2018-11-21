@@ -28,28 +28,13 @@ class AddRecipe extends React.Component<{}, IState> {
                 open={this.state.isOpen}
                 onClose={this.closeModal}
                 aria-labelledby="form-dialog-title"
+                fullWidth
                 >
                 <DialogTitle id="form-dialog-title"><p className="add-recipe-header">Add Recipe</p></DialogTitle>
                 <DialogContent>
                     <DialogContentText className="add-recipe-text"> 
                         Add your recipe to the website! Give it a name, attach a photo of it, give your name, and give the steps needed to make it. 
                     </DialogContentText>
-                    {/* <TextField
-                    margin="dense"
-                    id="Name"
-                    label="Your Name"
-                    type="text"
-                    required
-                    fullWidth
-                    />
-                    <TextField
-                    margin="dense"
-                    id="Title"
-                    label="Recipe Title"
-                    type="text"
-                    required
-                    fullWidth
-                    /> */}
                     <div className="recipe-inputs">
                     <input type = "text" placeholder="Recipe Title" id="recipe-title-input"/>
                     <input type = "text" placeholder="Your Name" id="recipe-publisher-input"/>

@@ -123,6 +123,12 @@ input[type="text"] {
   resize: none;
 }
 
+.recipe-header {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 40px;
+}
+
 input[type="file"] {
   margin-top: 2rem;
   font-size: 13px;

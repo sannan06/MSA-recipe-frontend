@@ -52,23 +52,26 @@ class App extends React.Component<{}, IState> {
 
   // Fetch recipes based on user search and using API
   private getRecipes = async (recipeSearch: any) => {
-    let url = 'https://www.food2fork.com/api/search?key=0a96d0a56859b5e2c759d18bcccc097d'
+    // let url = 'https://www.food2fork.com/api/search?key=0a96d0a56859b5e2c759d18bcccc097d'
+    let url = 'https://recipe-bank-api.azurewebsites.net/api/recipe'
     if (recipeSearch !== ""){
-      url += "&q=" + recipeSearch + "&count=12"
-    } else{
-      url += "&count=12"
-    }
+      url += "/" + recipeSearch
+    } 
     const apiCall = await fetch(url)
     const data = await apiCall.json()
 
-    // If API returns valid response (i.e. 12 recipes are returned)
-    if(data.count === 12){
-      this.setState({
-        recipes: data.recipes
-      })
-    } else{
-      alert("Bad Request")
-    }
+    this.setState({
+      recipes: data
+    })
+
+    // // If API returns valid response (i.e. 12 recipes are returned)
+    // if(data.count === 12){
+    //   this.setState({
+    //     recipes: data.recipes
+    //   })
+    // } else{
+    //   alert("Bad Request")
+    // }
 
   }
 
