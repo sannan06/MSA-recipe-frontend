@@ -78,6 +78,11 @@ button:focus {
   font-size: 16px !important;
 }
 
+.message-id {
+  font-size: 18px !important;
+  font-weight: 500;
+}
+
 .recipes__title {
   color: #4F2D7F;
   text-transform: uppercase;

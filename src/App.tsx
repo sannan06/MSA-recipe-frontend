@@ -4,11 +4,14 @@ import Recipes from './components/Recipes';
 import AddRecipe from './components/AddRecipe';
 import MediaStreamRecorder from 'msr';
 import './App.css';
+import { Snackbar } from '@material-ui/core';
 
 interface IState {
   recipes: any[],
   voiceSearch: any,
-  open: boolean
+  open: boolean,
+  vertical: any,
+  horizontal: any
 }
 
 class App extends React.Component<{}, IState> {
@@ -17,16 +20,21 @@ class App extends React.Component<{}, IState> {
     this.state = {
       recipes: [],
       voiceSearch: "",
-      open: false
+      open: false,
+      vertical: 'top',
+      horizontal: 'right'
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
     this.searchRecipesByVoice = this.searchRecipesByVoice.bind(this)
     this.postAudio = this.postAudio.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.handleClose = this.handleClose.bind(this)
     this.getRecipes("")
   }
 
   public render() {
+    const { vertical, horizontal } = this.state
     return (
       <div className="App">
         <header className="App-header">
@@ -35,7 +43,16 @@ class App extends React.Component<{}, IState> {
         </header>
         <form onSubmit = {this.getRecipeSearch} className="search-field">
             <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }} value={this.state.voiceSearch} onChange={this.handleChange}/>
-            <div className="btn" onClick={this.searchRecipesByVoice}><i className="fa fa-microphone" /></div>
+            <div className="btn" onClick={this.handleClick}><i className="fa fa-microphone" /></div>
+            <Snackbar
+              anchorOrigin={{vertical, horizontal}}
+              open={this.state.open}
+              onClose={this.handleClose}
+              ContentProps={{
+                'aria-describedby': 'message-id',
+              }}
+              message={<span id="message-id" className="message-id">Say a tag to search for it</span>}
+            />
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
         <Recipes recipes={ this.state.recipes }/>
@@ -69,6 +86,7 @@ class App extends React.Component<{}, IState> {
 
   }
 
+  // Get user voice as audio 
   private searchRecipesByVoice = () => {
 
     const mediaConstraints = {
@@ -93,6 +111,7 @@ class App extends React.Component<{}, IState> {
 
   }
 
+  // Make API call to inerpret user voice search
   private postAudio = (blob: any) => {
 
     let accessToken: any;
@@ -113,7 +132,7 @@ class App extends React.Component<{}, IState> {
         console.log("Error", error)
     });
 
-    // posting audio
+    // POST audio
     fetch('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US', {
       body: blob, // this is a .wav audio file    
       headers: {
@@ -142,7 +161,18 @@ class App extends React.Component<{}, IState> {
     this.setState({
       voiceSearch: e.target.value
     })
-  } 
+  }
+  
+  // Handle opening of toast
+  private handleClick = () => {
+    this.setState({ open: true })
+    this.searchRecipesByVoice
+  }
+
+  // Handle closing of toast
+  private handleClose = () => {
+    this.setState({ open: false })
+  }
 
 }
 
