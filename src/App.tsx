@@ -2,11 +2,12 @@ import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
 import Recipes from './components/Recipes';
 import AddRecipe from './components/AddRecipe';
-// import MediaStreamRecorder from 'msr';
+import MediaStreamRecorder from 'msr';
 import './App.css';
 
 interface IState {
   recipes: any[],
+  voiceSearch: any,
   open: boolean
 }
 
@@ -15,10 +16,13 @@ class App extends React.Component<{}, IState> {
     super(props)
     this.state = {
       recipes: [],
+      voiceSearch: "",
       open: false
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
     this.searchRecipesByVoice = this.searchRecipesByVoice.bind(this)
+    this.postAudio = this.postAudio.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.getRecipes("")
   }
 
@@ -30,8 +34,8 @@ class App extends React.Component<{}, IState> {
           <AddRecipe />
         </header>
         <form onSubmit = {this.getRecipeSearch} className="search-field">
-            <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }}/>
-            <div className="btn" ><i className="fa fa-microphone" /></div>
+            <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }} value={this.state.voiceSearch} onChange={this.handleChange}/>
+            <div className="btn" onClick={this.searchRecipesByVoice}><i className="fa fa-microphone" /></div>
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
         <Recipes recipes={ this.state.recipes }/>
@@ -52,7 +56,6 @@ class App extends React.Component<{}, IState> {
 
   // Fetch recipes based on user search and using API
   private getRecipes = async (recipeSearch: any) => {
-    // let url = 'https://www.food2fork.com/api/search?key=0a96d0a56859b5e2c759d18bcccc097d'
     let url = 'https://recipe-bank-api.azurewebsites.net/api/recipe'
     if (recipeSearch !== ""){
       url += "/" + recipeSearch
@@ -64,39 +67,82 @@ class App extends React.Component<{}, IState> {
       recipes: data
     })
 
-    // // If API returns valid response (i.e. 12 recipes are returned)
-    // if(data.count === 12){
-    //   this.setState({
-    //     recipes: data.recipes
-    //   })
-    // } else{
-    //   alert("Bad Request")
-    // }
+  }
+
+  private searchRecipesByVoice = () => {
+
+    const mediaConstraints = {
+      audio: true
+    }
+
+    const onMediaSuccess = (stream: any) => {
+        const mediaRecorder = new MediaStreamRecorder(stream);
+        mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
+        mediaRecorder.ondataavailable = (blob: any) => {
+            mediaRecorder.stop()
+            this.postAudio(blob);
+        }
+        mediaRecorder.start(3000);
+    }
+
+    navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
+
+    function onMediaError(e: any) {
+        console.error('media error', e);
+    }
 
   }
 
-  private searchRecipesByVoice () {
+  private postAudio = (blob: any) => {
 
-    // const mediaConstraints = {
-    // audio: true
-    // }
+    let accessToken: any;
+    fetch('https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken', {
+        headers: {
+            'Content-Length': '0',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Ocp-Apim-Subscription-Key': '7b49b5562f2e40e786f6e54e7163365a'
+        },
+        method: 'POST'
+    }).then((response) => {
+        // console.log(response.text())
+        return response.text()
+    }).then((response) => {
+        console.log(response)
+        accessToken = response
+    }).catch((error) => {
+        console.log("Error", error)
+    });
 
-    // const onMediaSuccess = (stream: any) => {
-    //     const mediaRecorder = new MediaStreamRecorder(stream);
-    //     mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
-    //     mediaRecorder.ondataavailable = (blob: any) => {
-    //         // this.postAudio(blob);
-    //         mediaRecorder.stop()
-    //     }
-    //     mediaRecorder.start(3000);
-    // }
+    // posting audio
+    fetch('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US', {
+      body: blob, // this is a .wav audio file    
+      headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer' + accessToken,
+          'Content-Type': 'audio/wav;codec=audio/pcm; samplerate=16000',
+          'Ocp-Apim-Subscription-Key': '7b49b5562f2e40e786f6e54e7163365a'
+      },    
+      method: 'POST'
+    }).then((res) => {
+        return res.json()
+    }).then((res: any) => {
+      let response = (res.DisplayText as string).slice(0, -1)
+      response = response.toLowerCase()
+      this.setState({
+        voiceSearch: response
+      })
+        console.log(this.state.voiceSearch)
+    }).catch((error) => {
+        console.log("Error", error)
+    });
 
-    // navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
-
-    // function onMediaError(e: any) {
-    //     console.error('media error', e);
-    // }
   }
+
+  private handleChange = (e:any) => {
+    this.setState({
+      voiceSearch: e.target.value
+    })
+  } 
 
 }
 
