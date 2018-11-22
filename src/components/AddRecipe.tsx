@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogContentText,  Button, DialogActions } from '../../node_modules/@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogContentText,  Button, DialogActions, Snackbar } from '../../node_modules/@material-ui/core';
 // import Modal from 'react-responsive-modal';
 
 interface IState {
     isOpen: boolean,
-    uploadImage: any
+    uploadImage: any,
+    vertical: any,
+    horizontal: any,
+    open: boolean
 }
 
 interface IProps {
@@ -16,7 +19,10 @@ class AddRecipe extends React.Component<IProps, IState> {
         super(props)
         this.state = {
             isOpen: false,
-            uploadImage: null
+            uploadImage: null,
+            vertical: 'top',
+            horizontal: 'right',
+            open: false
         }
         this.openModal = this.openModal.bind(this)
         this.closeModal = this.closeModal.bind(this)
@@ -25,8 +31,19 @@ class AddRecipe extends React.Component<IProps, IState> {
     }
 
     public render() {
+        const { vertical, horizontal } = this.state
         return (
             <div>
+                <Snackbar
+                    anchorOrigin={{vertical, horizontal}}
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    autoHideDuration={6000}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id" className="message-id">Uploaded recipe</span>}
+                />
                 <Button className="add-recipe-button" onClick={ this.openModal }>Add Recipe</Button>
                 <Dialog
                 open={this.state.isOpen}
@@ -65,6 +82,13 @@ class AddRecipe extends React.Component<IProps, IState> {
     // Modal close
     private closeModal = () => {
         this.setState({ isOpen: false })
+    }
+
+    // Handle closing of Snackbar
+    private handleClose = () => {
+        this.setState({ 
+        open: false,
+        })
     }
 
     // Receive input for recipe image
@@ -110,7 +134,11 @@ class AddRecipe extends React.Component<IProps, IState> {
 				// Error State
 				alert(response.statusText)
 			} else {
-				this.props.getRecipes("")
+                this.closeModal()
+                this.setState({
+                    open: true
+                })
+                this.props.getRecipes("")
 			}
 		})
 

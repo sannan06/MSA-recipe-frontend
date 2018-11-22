@@ -1,17 +1,21 @@
 import * as React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
-import { DialogTitle, DialogActions, DialogContent, DialogContentText } from '../../node_modules/@material-ui/core';
+import { DialogTitle, DialogActions, DialogContent, DialogContentText, Snackbar } from '../../node_modules/@material-ui/core';
 
 interface IProps{
     recipes: any[],
     currentUser: any,
-    getRecipes: any
+    getRecipes: any,
 }
 
 interface IState{
-    open: any,
-    editOpen: any,
+    open: any,  // Open dialog to view recipes
+    editOpen: any, // Open dialog to edit recipes
+    openEdited: boolean, // Open Snackbar to say recipe is edited
+    openDeleted: boolean, // Open Snackbar to say recipe is deleted
+    vertical: any,
+    horizontal: any,
 }
 
 export default class Recipes extends React.Component<IProps, IState> {
@@ -19,7 +23,11 @@ export default class Recipes extends React.Component<IProps, IState> {
         super(props)
         this.state = {
             open: null,
-            editOpen: null
+            editOpen: null,
+            openEdited: false,
+            vertical: 'bottom',
+            horizontal: 'right',
+            openDeleted: false
         }
         this.handleClickOpen = this.handleClickOpen.bind(this)
         this.handleClose = this.handleClose.bind(this)
@@ -30,6 +38,7 @@ export default class Recipes extends React.Component<IProps, IState> {
     }
 
     public render() {
+        const { vertical, horizontal } = this.state
     
         return(
          <div className="container">
@@ -54,9 +63,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     aria-labelledby="alert-dialog-title"
                                     aria-describedby="alert-dialog-description"
                                 >
-                                <DialogTitle id="alert-dialog-title">
                                 <p className="recipe-header">{recipe.title}</p>
-                                </DialogTitle>
                                 <DialogContent className="dialog-box-text">
                                     <img src={ recipe.image_url } alt={ recipe.title }/>
                                     <DialogContentText>
@@ -64,6 +71,9 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     </DialogContentText>
                                     <h2 className="steps-title">Steps:</h2>
                                     <p>{ recipe.steps }</p>
+                                    <div className="fb-share-button"  
+                                        data-layout="button_count">
+                                    </div>
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={this.handleClose} color="primary">
@@ -100,6 +110,26 @@ export default class Recipes extends React.Component<IProps, IState> {
                                  {!(recipe.publisher.localeCompare(this.props.currentUser)) ?
                                  <Button onClick={e=>{this.deleteRecipe(recipe)}}>Delete</Button>
                                  : ""}
+                                 <Snackbar
+                                    anchorOrigin={{vertical, horizontal}}
+                                    open={this.state.openEdited}
+                                    onClose={this.handleClose}
+                                    autoHideDuration={6000}
+                                    ContentProps={{
+                                        'aria-describedby': 'message-id',
+                                    }}
+                                    message={<span id="message-id" className="message-id">Edited recipe</span>}
+                                />
+                                <Snackbar
+                                    anchorOrigin={{vertical, horizontal}}
+                                    open={this.state.openDeleted}
+                                    onClose={this.handleClose}
+                                    autoHideDuration={6000}
+                                    ContentProps={{
+                                        'aria-describedby': 'message-id',
+                                    }}
+                                    message={<span id="message-id" className="message-id">Deleted recipe</span>}
+                                />
                              </div>
                          </div>
                      )
@@ -116,7 +146,11 @@ export default class Recipes extends React.Component<IProps, IState> {
 
     // Dialog to close recipe 
     private handleClose = () => {
-        this.setState({ open: null })
+        this.setState({ 
+            open: null,
+            openEdited: false,
+            openDeleted: false 
+        })
     }
 
     // Dialog to edit recipe open
@@ -127,7 +161,7 @@ export default class Recipes extends React.Component<IProps, IState> {
     }
 
     // Close edit recipe dialog
-    private closeEditRecipe =() => {
+    private closeEditRecipe = () => {
         this.setState({
             editOpen: null
         })
@@ -165,6 +199,10 @@ export default class Recipes extends React.Component<IProps, IState> {
 				// Error State
 				alert(response.statusText + " " + url)
 			} else {
+                this.closeEditRecipe()
+                this.setState({
+                    openEdited: true
+                })
 				this.props.getRecipes("")
 			}
 		})
@@ -183,6 +221,9 @@ export default class Recipes extends React.Component<IProps, IState> {
 				// Error State
 				alert(response.statusText + " " + url)
 			} else {
+                this.setState({
+                    openDeleted: true
+                })
 				this.props.getRecipes("")
 			}
 		})

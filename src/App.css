@@ -131,7 +131,10 @@ input[type="text"] {
 .recipe-header {
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-size: 40px;
+  margin-left: 2.5rem;
+  margin-right: 1rem;
+  font-size: 40px !important;
+  font-weight: 600;
 }
 
 .login-button {
