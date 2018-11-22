@@ -137,25 +137,20 @@ class App extends React.Component<{}, IState> {
       open: true
     })
 
-    const mediaConstraints = {
-      audio: true
-    }
-
-    const onMediaSuccess = (stream: any) => {
+    navigator.mediaDevices.getUserMedia({audio:true})
+    .then((stream)=> {
         const mediaRecorder = new MediaStreamRecorder(stream);
+        mediaRecorder.stop()
         mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
         mediaRecorder.ondataavailable = (blob: any) => {
-            mediaRecorder.stop()
             this.postAudio(blob);
+            mediaRecorder.stop()
         }
         mediaRecorder.start(3000);
-    }
-
-    navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
-
-    function onMediaError(e: any) {
-        console.error('media error', e);
-    }
+    })
+    .catch((e:any)=>{
+        console.log(e);
+    })
 
   }
 
