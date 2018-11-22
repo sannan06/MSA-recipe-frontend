@@ -134,6 +134,10 @@ input[type="text"] {
   font-size: 40px;
 }
 
+.login-button {
+  margin-left: 30rem !important;
+}
+
 input[type="file"] {
   margin-top: 2rem;
   font-size: 13px;

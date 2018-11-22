@@ -1,12 +1,11 @@
 import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
-import * as Webcam from "react-webcam";
 import Recipes from './components/Recipes';
 import AddRecipe from './components/AddRecipe';
+import Authentication from './components/Authentication';
 import MediaStreamRecorder from 'msr';
 import './App.css';
 import { Snackbar } from '@material-ui/core';
-import Modal from 'react-modal';
 
 interface IState {
   recipes: any[],
@@ -16,7 +15,10 @@ interface IState {
   horizontal: any,
   authenticated: boolean,
   refCamera: any,
-  errorOpen: boolean
+  errorOpen: boolean,
+  currentUser: any,
+  openWelcome: any,
+  failedAuthenticate: boolean
 }
 
 class App extends React.Component<{}, IState> {
@@ -30,34 +32,43 @@ class App extends React.Component<{}, IState> {
       horizontal: 'right',
       authenticated: false,
       refCamera: React.createRef(),
-      errorOpen: false
+      errorOpen: false,
+      currentUser: null,
+      openWelcome: false,
+      failedAuthenticate: false,
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
     this.searchRecipesByVoice = this.searchRecipesByVoice.bind(this)
     this.postAudio = this.postAudio.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    this.authenticate = this.authenticate.bind(this)
+    this.allowAccess = this.allowAccess.bind(this)
+    // this.authenticate = this.authenticate.bind(this)
+    // this.getFaceRecognitionResult = this.getFaceRecognitionResult.bind(this)
     this.getRecipes("")
   }
 
   public render() {
-    const { vertical, horizontal, authenticated } = this.state
+    const { vertical, horizontal } = this.state
     return (
       <div className="App">
 
-      {(!authenticated) ?
-      <Modal open={!authenticated} onClose={this.authenticate} closeOnOverlayClick={false} showCloseIcon={false} center={true}>
-        <Webcam
-          audio={false}
-          screenshotFormat="image/jpeg"
-          ref={this.state.refCamera}
-        />
-        <div className="row nav-row">
-          <div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
-        </div>
-      </Modal> : ""}
+      {(!this.state.authenticated) ?
+      <Authentication authenticated={this.state.authenticated} refCamera={this.state.refCamera} allowAccess={this.allowAccess}/>
+       : ""}
 
+      {(this.state.authenticated) ?
+      <div>
+        <Snackbar
+          anchorOrigin={{vertical, horizontal}}
+          open={this.state.openWelcome}
+          onClose={this.handleClose}
+          autoHideDuration={3000}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id" className="message-id">Welcome, {this.state.currentUser}</span>}
+        />
         <header className="App-header">
           <h1 className="App-title">Recipe Search</h1>
           <AddRecipe />
@@ -87,7 +98,9 @@ class App extends React.Component<{}, IState> {
             />
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
-        <Recipes recipes={ this.state.recipes }/>
+        <Recipes recipes={this.state.recipes} currentUser={this.state.currentUser}/>
+      </div>
+          : "" }	 
       </div>
     );
   }
@@ -207,14 +220,64 @@ class App extends React.Component<{}, IState> {
   private handleClose = () => {
     this.setState({ 
       open: false,
-      errorOpen: false
+      errorOpen: false,
+      openWelcome: false,
      })
   }
 
-  // Authenticate
-  private authenticate() { 
-    // const screenshot = this.state.refCamera.current.getScreenshot();
+  // Authenticate and allow access
+  private allowAccess(CR: any) {
+    this.setState({
+      authenticated: true,
+      currentUser: CR,
+      openWelcome: true
+    })
   }
+
+  // // Authenticate
+  // private authenticate() {
+  //   const screenshot = this.state.refCamera.current.getScreenshot();
+	//   this.getFaceRecognitionResult(screenshot);
+  // }
+
+  // // Call custom vision model
+  // private getFaceRecognitionResult(image: string) {
+  //   const url = "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/3cdd03ca-fa60-4655-b041-22a7208f049a/image?iterationId=043ef7eb-aa19-4c24-b828-b583a774a4ce"
+  //   if (image === null) {
+  //     return;
+  //   }
+  //   const base64 = require('base64-js');
+  //   const base64content = image.split(";")[1].split(",")[1]
+  //   const byteArray = base64.toByteArray(base64content);
+  //   fetch(url, {
+  //     body: byteArray,
+  //     headers: {
+  //       'cache-control': 'no-cache', 'Prediction-Key': '8b81665bb28e46e888d6c4e9bedc441f', 'Content-Type': 'application/octet-stream'
+  //     },
+  //     method: 'POST'
+  //   })
+  //     .then((response: any) => {
+  //       if (!response.ok) {
+  //         // Error State
+  //         alert(response.statusText)
+  //       } else {
+  //         response.json().then((json: any) => {
+  //           console.log(json.predictions[0])
+  //           this.setState({predictionResult: json.predictions[0] })
+  //           if (this.state.predictionResult.probability > 0.7) {
+  //             this.setState({
+  //               authenticated: true,
+  //               currentUser: this.state.predictionResult.tagName,
+  //               openWelcome: true,
+  //             })
+  //           } else {
+  //             alert("Could not authenticate user. Try again")
+  //             this.setState({authenticated: false})
+  //           }
+  //         })
+  //       }
+  //     })
+  // }
 
 }
 

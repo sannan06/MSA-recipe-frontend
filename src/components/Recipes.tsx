@@ -5,6 +5,7 @@ import { DialogTitle, DialogActions, DialogContent, DialogContentText } from '..
 
 interface IProps{
     recipes: any[],
+    currentUser: any
 }
 
 interface IState{
@@ -23,7 +24,8 @@ export default class Recipes extends React.Component<IProps, IState> {
         this.handleClose = this.handleClose.bind(this)
         this.openEditRecipe = this.openEditRecipe.bind(this)
         this.closeEditRecipe = this.closeEditRecipe.bind(this)
-        this.updateRecipe = this.updateRecipe.bind(this)   
+        this.updateRecipe = this.updateRecipe.bind(this)
+        this.deleteRecipe = this.deleteRecipe.bind(this)   
     }
 
     public render() {
@@ -94,8 +96,9 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     </Button>
                                 </DialogActions>   
                                  </Dialog>
+                                 {!(recipe.publisher.localeCompare(this.props.currentUser)) ?
                                  <Button>Delete</Button>
-
+                                 : ""}
                              </div>
                          </div>
                      )
@@ -164,6 +167,11 @@ export default class Recipes extends React.Component<IProps, IState> {
 				location.reload()
 			}
 		})
+
+    }
+
+    // Make DELETE request
+    private deleteRecipe(recipe: any) {
 
     }
 
