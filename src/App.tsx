@@ -69,7 +69,7 @@ class App extends React.Component<{}, IState> {
         />
         <header className="App-header">
           <h1 className="App-title">Recipe Search</h1>
-          <AddRecipe getRecipes={this.getRecipes}/>
+          <AddRecipe getRecipes={this.getRecipes} currentUser={this.state.currentUser}/>
         </header>
         <form onSubmit = {this.getRecipeSearch} className="search-field">
             <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }} value={this.state.voiceSearch} onChange={this.handleChange}/>

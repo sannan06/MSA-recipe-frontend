@@ -11,7 +11,8 @@ interface IState {
 }
 
 interface IProps {
-    getRecipes: any
+    getRecipes: any,
+    currentUser: any
 }
 
 class AddRecipe extends React.Component<IProps, IState> {
@@ -58,7 +59,7 @@ class AddRecipe extends React.Component<IProps, IState> {
                     </DialogContentText>
                     <div className="recipe-inputs">
                     <input type = "text" placeholder="Recipe Title" id="recipe-title-input"/>
-                    <input type = "text" placeholder="Your Name" id="recipe-publisher-input"/>
+                    <input type = "text" defaultValue={this.props.currentUser} id="recipe-publisher-input"/>
                     <input type = "text" placeholder="Tag" id="recipe-tag-input"/>
                     <textarea placeholder="Enter steps here..." id="recipe-steps"></textarea>
                     </div>
@@ -105,9 +106,13 @@ class AddRecipe extends React.Component<IProps, IState> {
         const publisherInput = document.getElementById("recipe-publisher-input") as HTMLInputElement
         const tagInput = document.getElementById("recipe-tag-input") as HTMLInputElement
         const recipeSteps = document.getElementById("recipe-steps") as HTMLInputElement
+        if(this.state.uploadImage === null){
+            alert("Error, please upload an image")
+            return
+        }
         const imageInput = this.state.uploadImage[0]
 
-        if(recipeTitle === null || publisherInput === null || tagInput === null) {
+        if(recipeTitle === null || publisherInput === null || tagInput === null || imageInput === null) {
             return
         }
 
