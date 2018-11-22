@@ -43,8 +43,6 @@ class App extends React.Component<{}, IState> {
     this.handleChange = this.handleChange.bind(this)
     this.handleClose = this.handleClose.bind(this)
     this.allowAccess = this.allowAccess.bind(this)
-    // this.authenticate = this.authenticate.bind(this)
-    // this.getFaceRecognitionResult = this.getFaceRecognitionResult.bind(this)
     this.getRecipes("")
   }
 
@@ -71,7 +69,7 @@ class App extends React.Component<{}, IState> {
         />
         <header className="App-header">
           <h1 className="App-title">Recipe Search</h1>
-          <AddRecipe />
+          <AddRecipe getRecipes={this.getRecipes}/>
         </header>
         <form onSubmit = {this.getRecipeSearch} className="search-field">
             <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }} value={this.state.voiceSearch} onChange={this.handleChange}/>
@@ -98,7 +96,7 @@ class App extends React.Component<{}, IState> {
             />
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
-        <Recipes recipes={this.state.recipes} currentUser={this.state.currentUser}/>
+        <Recipes recipes={this.state.recipes} currentUser={this.state.currentUser} getRecipes={this.getRecipes}/>
       </div>
           : "" }	 
       </div>
@@ -228,51 +226,6 @@ class App extends React.Component<{}, IState> {
       openWelcome: true
     })
   }
-
-  // // Authenticate
-  // private authenticate() {
-  //   const screenshot = this.state.refCamera.current.getScreenshot();
-	//   this.getFaceRecognitionResult(screenshot);
-  // }
-
-  // // Call custom vision model
-  // private getFaceRecognitionResult(image: string) {
-  //   const url = "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/3cdd03ca-fa60-4655-b041-22a7208f049a/image?iterationId=043ef7eb-aa19-4c24-b828-b583a774a4ce"
-  //   if (image === null) {
-  //     return;
-  //   }
-  //   const base64 = require('base64-js');
-  //   const base64content = image.split(";")[1].split(",")[1]
-  //   const byteArray = base64.toByteArray(base64content);
-  //   fetch(url, {
-  //     body: byteArray,
-  //     headers: {
-  //       'cache-control': 'no-cache', 'Prediction-Key': '8b81665bb28e46e888d6c4e9bedc441f', 'Content-Type': 'application/octet-stream'
-  //     },
-  //     method: 'POST'
-  //   })
-  //     .then((response: any) => {
-  //       if (!response.ok) {
-  //         // Error State
-  //         alert(response.statusText)
-  //       } else {
-  //         response.json().then((json: any) => {
-  //           console.log(json.predictions[0])
-  //           this.setState({predictionResult: json.predictions[0] })
-  //           if (this.state.predictionResult.probability > 0.7) {
-  //             this.setState({
-  //               authenticated: true,
-  //               currentUser: this.state.predictionResult.tagName,
-  //               openWelcome: true,
-  //             })
-  //           } else {
-  //             alert("Could not authenticate user. Try again")
-  //             this.setState({authenticated: false})
-  //           }
-  //         })
-  //       }
-  //     })
-  // }
 
 }
 

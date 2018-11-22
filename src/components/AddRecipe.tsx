@@ -7,7 +7,11 @@ interface IState {
     uploadImage: any
 }
 
-class AddRecipe extends React.Component<{}, IState> {
+interface IProps {
+    getRecipes: any
+}
+
+class AddRecipe extends React.Component<IProps, IState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -106,7 +110,7 @@ class AddRecipe extends React.Component<{}, IState> {
 				// Error State
 				alert(response.statusText)
 			} else {
-				location.reload()
+				this.props.getRecipes("")
 			}
 		})
 

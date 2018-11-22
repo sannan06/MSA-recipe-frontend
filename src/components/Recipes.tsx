@@ -5,7 +5,8 @@ import { DialogTitle, DialogActions, DialogContent, DialogContentText } from '..
 
 interface IProps{
     recipes: any[],
-    currentUser: any
+    currentUser: any,
+    getRecipes: any
 }
 
 interface IState{
@@ -97,7 +98,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                 </DialogActions>   
                                  </Dialog>
                                  {!(recipe.publisher.localeCompare(this.props.currentUser)) ?
-                                 <Button>Delete</Button>
+                                 <Button onClick={e=>{this.deleteRecipe(recipe)}}>Delete</Button>
                                  : ""}
                              </div>
                          </div>
@@ -164,7 +165,7 @@ export default class Recipes extends React.Component<IProps, IState> {
 				// Error State
 				alert(response.statusText + " " + url)
 			} else {
-				location.reload()
+				this.props.getRecipes("")
 			}
 		})
 
@@ -172,7 +173,19 @@ export default class Recipes extends React.Component<IProps, IState> {
 
     // Make DELETE request
     private deleteRecipe(recipe: any) {
-
+        const url = 'https://recipe-bank-api.azurewebsites.net/api/recipe'
+        console.log(recipe.id)
+        fetch(url + '/' + recipe.id, {
+            method: 'DELETE'
+        })
+        .then((response : any) => {
+			if (!response.ok) {
+				// Error State
+				alert(response.statusText + " " + url)
+			} else {
+				this.props.getRecipes("")
+			}
+		})
     }
 
 
