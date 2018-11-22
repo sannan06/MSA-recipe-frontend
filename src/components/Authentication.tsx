@@ -98,6 +98,9 @@ export default class Recipes extends React.Component<IProps, IState> {
         this.setState({
             name: response.name
         })
+        if(this.state.name === undefined){
+            return
+        }
         this.props.allowAccess(this.state.name)
     }
         
