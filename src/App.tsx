@@ -1,17 +1,22 @@
 import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
+import * as Webcam from "react-webcam";
 import Recipes from './components/Recipes';
 import AddRecipe from './components/AddRecipe';
 import MediaStreamRecorder from 'msr';
 import './App.css';
 import { Snackbar } from '@material-ui/core';
+import Modal from 'react-modal';
 
 interface IState {
   recipes: any[],
   voiceSearch: any,
   open: boolean,
   vertical: any,
-  horizontal: any
+  horizontal: any,
+  authenticated: boolean,
+  refCamera: any,
+  errorOpen: boolean
 }
 
 class App extends React.Component<{}, IState> {
@@ -22,36 +27,63 @@ class App extends React.Component<{}, IState> {
       voiceSearch: "",
       open: false,
       vertical: 'top',
-      horizontal: 'right'
+      horizontal: 'right',
+      authenticated: false,
+      refCamera: React.createRef(),
+      errorOpen: false
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
     this.searchRecipesByVoice = this.searchRecipesByVoice.bind(this)
     this.postAudio = this.postAudio.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.handleClick = this.handleClick.bind(this)
     this.handleClose = this.handleClose.bind(this)
+    this.authenticate = this.authenticate.bind(this)
     this.getRecipes("")
   }
 
   public render() {
-    const { vertical, horizontal } = this.state
+    const { vertical, horizontal, authenticated } = this.state
     return (
       <div className="App">
+
+      {(!authenticated) ?
+      <Modal open={!authenticated} onClose={this.authenticate} closeOnOverlayClick={false} showCloseIcon={false} center={true}>
+        <Webcam
+          audio={false}
+          screenshotFormat="image/jpeg"
+          ref={this.state.refCamera}
+        />
+        <div className="row nav-row">
+          <div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
+        </div>
+      </Modal> : ""}
+
         <header className="App-header">
           <h1 className="App-title">Recipe Search</h1>
           <AddRecipe />
         </header>
         <form onSubmit = {this.getRecipeSearch} className="search-field">
             <MaterialDesign.TextField type="text" id="recipe-search" style = {{ fontSize:"10px" }} value={this.state.voiceSearch} onChange={this.handleChange}/>
-            <div className="btn" onClick={this.handleClick}><i className="fa fa-microphone" /></div>
+            <div className="btn" onClick={this.searchRecipesByVoice}><i className="fa fa-microphone" /></div>
             <Snackbar
               anchorOrigin={{vertical, horizontal}}
               open={this.state.open}
               onClose={this.handleClose}
+              autoHideDuration={6000}
               ContentProps={{
                 'aria-describedby': 'message-id',
               }}
               message={<span id="message-id" className="message-id">Say a tag to search for it</span>}
+            />
+            <Snackbar
+              anchorOrigin={{vertical, horizontal}}
+              open={this.state.errorOpen}
+              onClose={this.handleClose}
+              autoHideDuration={6000}
+              ContentProps={{
+                'aria-describedby': 'message-id',
+              }}
+              message={<span id="message-id" className="message-id">Sorry, please try again</span>}
             />
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
         </form>
@@ -88,6 +120,9 @@ class App extends React.Component<{}, IState> {
 
   // Get user voice as audio 
   private searchRecipesByVoice = () => {
+    this.setState({
+      open: true
+    })
 
     const mediaConstraints = {
       audio: true
@@ -145,6 +180,7 @@ class App extends React.Component<{}, IState> {
     }).then((res) => {
         return res.json()
     }).then((res: any) => {
+      console.log(res.DisplayText)
       let response = (res.DisplayText as string).slice(0, -1)
       response = response.toLowerCase()
       this.setState({
@@ -152,6 +188,10 @@ class App extends React.Component<{}, IState> {
       })
         console.log(this.state.voiceSearch)
     }).catch((error) => {
+      this.setState({
+        errorOpen: true,
+        open: false
+      })
         console.log("Error", error)
     });
 
@@ -162,16 +202,18 @@ class App extends React.Component<{}, IState> {
       voiceSearch: e.target.value
     })
   }
-  
-  // Handle opening of toast
-  private handleClick = () => {
-    this.setState({ open: true })
-    this.searchRecipesByVoice
+
+  // Handle closing of Snackbar
+  private handleClose = () => {
+    this.setState({ 
+      open: false,
+      errorOpen: false
+     })
   }
 
-  // Handle closing of toast
-  private handleClose = () => {
-    this.setState({ open: false })
+  // Authenticate
+  private authenticate() { 
+    // const screenshot = this.state.refCamera.current.getScreenshot();
   }
 
 }
