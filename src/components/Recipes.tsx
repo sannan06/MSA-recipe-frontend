@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
-import { DialogTitle, DialogActions, DialogContent, DialogContentText, Snackbar } from '../../node_modules/@material-ui/core';
+import { DialogActions, DialogContent, DialogContentText, Snackbar } from '../../node_modules/@material-ui/core';
+import { TwitterShareButton, TumblrShareButton, PinterestShareButton, RedditShareButton } from "react-simple-share";
 
 interface IProps{
     recipes: any[],
@@ -71,8 +72,32 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     </DialogContentText>
                                     <h2 className="steps-title">Steps:</h2>
                                     <p>{ recipe.steps }</p>
-                                    <div className="fb-share-button"  
-                                        data-layout="button_count">
+                                    <h3>Share this recipe:</h3>
+                                    <div className="share-buttons">
+                                    <TwitterShareButton
+                                        url={window.location.href}
+                                        size="40px"
+                                        text={`Check out this recipe for ${recipe.title} from Recipe Search!\n${recipe.steps}\n`}
+                                        hashtags={`food,recipes,${recipe.tag}`}
+                                    />
+                                    <TumblrShareButton
+                                        url={window.location.href}
+                                        size="40px"
+                                        title={`Recipe for ${recipe.title}`}
+                                        caption={`Steps:\n${recipe.steps}`}
+                                        tags={`food,recipes,${recipe.tag}`}
+                                    />
+                                    <PinterestShareButton
+                                        url={window.location.href}
+                                        size="40px"
+                                        description={`Check out this recipe for ${recipe.title} at Recipe Share!`}
+                                        media={recipe.image_url}
+                                    />
+                                    <RedditShareButton
+                                        url={window.location.href}
+                                        size="40px"
+                                        title={`Check out ${recipe.title} at Recipe Search!`}
+                                    />
                                     </div>
                                 </DialogContent>
                                 <DialogActions>
@@ -89,9 +114,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     aria-labelledby="alert-dialog-title"
                                     aria-describedby="alert-dialog-description"
                                  >
-                                <DialogTitle id="alert-dialog-title">
                                 <p className="recipe-header">Edit Recipe</p>
-                                </DialogTitle>
                                 <DialogContent className="dialog-box-text">
                                 <DialogContentText className="add-recipe-text">Edit this recipe if you see any errors, or have a better way to make it!</DialogContentText>
                                 <div className="recipe-inputs">
