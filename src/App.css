@@ -113,6 +113,10 @@ a {
   color: #4F2D7F !important;
 }
 
+.row-nav-row {
+  display: block;
+}
+
 .recipe-inputs input[type="text"] {
   border: none;
   border-bottom: 2px solid #4F2D7F;
@@ -143,6 +147,10 @@ a {
 
 .login-button {
   margin-left: 30rem !important;
+}
+
+.facebook-login {
+  margin-left: 22rem !important;
 }
 
 input[type="file"] {

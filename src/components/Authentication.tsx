@@ -37,14 +37,16 @@ export default class Recipes extends React.Component<IProps, IState> {
           screenshotFormat="image/jpeg"
           ref={this.props.refCamera}
         />
-        <div className="row nav-row">
+        <div className="row-nav-row">
           <MaterialDesign.Button onClick={this.authenticate} className="login-button">Login</MaterialDesign.Button>
+          <div className="facebook-login">
           <FacebookLogin
             appId="703940919984019"
             autoLoad={true}
             fields="name"
             onClick={this.componentClicked}
-            callback={this.responseFacebook} />,
+            callback={this.responseFacebook} />
+            </div>
         </div>
       </Modal>
         )
@@ -94,6 +96,7 @@ export default class Recipes extends React.Component<IProps, IState> {
         console.log("clicked")
     }
 
+    // Authenticate with facebook, and allow access
     private responseFacebook = (response: any) => {
         this.setState({
             name: response.name

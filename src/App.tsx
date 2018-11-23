@@ -38,10 +38,6 @@ class App extends React.Component<{}, IState> {
       failedAuthenticate: false,
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
-    this.searchRecipesByVoice = this.searchRecipesByVoice.bind(this)
-    this.postAudio = this.postAudio.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleClose = this.handleClose.bind(this)
     this.allowAccess = this.allowAccess.bind(this)
     this.getRecipes("")
   }
@@ -95,6 +91,7 @@ class App extends React.Component<{}, IState> {
               message={<span id="message-id" className="message-id">Sorry, please try again</span>}
             />
             <MaterialDesign.Button onClick={ this.getRecipeSearch }>Search</MaterialDesign.Button>
+            <MaterialDesign.Button onClick={e=>{this.getRecipes("")}}>View All</MaterialDesign.Button>
         </form>
         <Recipes recipes={this.state.recipes} currentUser={this.state.currentUser} getRecipes={this.getRecipes}/>
       </div>

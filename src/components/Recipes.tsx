@@ -31,9 +31,7 @@ export default class Recipes extends React.Component<IProps, IState> {
             openDeleted: false
         }
         this.handleClickOpen = this.handleClickOpen.bind(this)
-        this.handleClose = this.handleClose.bind(this)
         this.openEditRecipe = this.openEditRecipe.bind(this)
-        this.closeEditRecipe = this.closeEditRecipe.bind(this)
         this.updateRecipe = this.updateRecipe.bind(this)
         this.deleteRecipe = this.deleteRecipe.bind(this)   
     }
@@ -57,7 +55,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                      { recipe.publisher }
                                      </span></p>
                                  </div>
-                                 <Button onClick = {e => this.handleClickOpen(e, index)}>View Recipe</Button>
+                                 <Button onClick = {e => this.handleClickOpen(e, index)}>View</Button>
                                  <Dialog 
                                     open = {this.state.open === index}
                                     onClose = {this.handleClose}
@@ -107,7 +105,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                 </DialogActions>      
                                 </Dialog>
 
-                                 <Button onClick = {e => this.openEditRecipe(e, index)}>Edit Recipe</Button>
+                                 <Button onClick = {e => this.openEditRecipe(e, index)}>Edit</Button>
                                  <Dialog
                                     open={this.state.editOpen === index}
                                     onClose = {this.closeEditRecipe}

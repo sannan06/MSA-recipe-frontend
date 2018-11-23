@@ -25,8 +25,6 @@ class AddRecipe extends React.Component<IProps, IState> {
             horizontal: 'right',
             open: false
         }
-        this.openModal = this.openModal.bind(this)
-        this.closeModal = this.closeModal.bind(this)
         this.handleImageUpload = this.handleImageUpload.bind(this)
         this.uploadRecipe = this.uploadRecipe.bind(this)
     }
