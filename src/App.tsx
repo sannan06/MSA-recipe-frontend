@@ -90,8 +90,8 @@ class App extends React.Component<{}, IState> {
               }}
               message={<span id="message-id" className="message-id">Sorry, please try again</span>}
             />
-            <MaterialDesign.Button onClick={ this.getRecipeSearch } className="add-recipe-button">Search</MaterialDesign.Button>
-            <MaterialDesign.Button onClick={e=>{this.getRecipes("")}} className="add-recipe-button">View All</MaterialDesign.Button>
+            <MaterialDesign.Button onClick={ this.getRecipeSearch } className="button-styling">Search</MaterialDesign.Button>
+            <MaterialDesign.Button onClick={e=>{this.getRecipes("")}} className="button-styling">View All</MaterialDesign.Button>
         </form>
         <Recipes recipes={this.state.recipes} currentUser={this.state.currentUser} getRecipes={this.getRecipes}/>
       </div>

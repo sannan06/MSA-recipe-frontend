@@ -62,6 +62,10 @@ button:focus {
   font-size: 16px !important;
 }
 
+.button-styling{
+  font-size: 16px !important;
+}
+
 .add-recipe-header {
   font-size: 24px !important;
 }

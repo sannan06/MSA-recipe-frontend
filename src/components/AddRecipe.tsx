@@ -64,7 +64,7 @@ class AddRecipe extends React.Component<IProps, IState> {
                     <input type="file" onChange={ this.handleImageUpload } id="recipe-image-input"/>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.uploadRecipe} color="primary" className="add-recipe-button">
+                    <Button onClick={this.uploadRecipe} color="primary" className="button-styling">
                         Upload
                     </Button>
                 </DialogActions>  

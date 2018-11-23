@@ -55,7 +55,7 @@ export default class Recipes extends React.Component<IProps, IState> {
                                      { recipe.publisher }
                                      </span></p>
                                  </div>
-                                 <Button onClick = {e => this.handleClickOpen(e, index)} className="add-recipe-button">View</Button>
+                                 <Button onClick = {e => this.handleClickOpen(e, index)} className="button-styling">View</Button>
                                  <Dialog 
                                     open = {this.state.open === index}
                                     onClose = {this.handleClose}
@@ -99,13 +99,13 @@ export default class Recipes extends React.Component<IProps, IState> {
                                     </div>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={this.handleClose} color="primary" className="add-recipe-button">
+                                    <Button onClick={this.handleClose} color="primary" className="button-styling">
                                         Close
                                     </Button>
                                 </DialogActions>      
                                 </Dialog>
 
-                                 <Button onClick = {e => this.openEditRecipe(e, index)} className="add-recipe-button">Edit</Button>
+                                 <Button onClick = {e => this.openEditRecipe(e, index)} className="button-styling">Edit</Button>
                                  <Dialog
                                     open={this.state.editOpen === index}
                                     onClose = {this.closeEditRecipe}
@@ -123,13 +123,13 @@ export default class Recipes extends React.Component<IProps, IState> {
                                 </div>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={e=>{this.updateRecipe(recipe)}} color="primary" className="add-recipe-button">
+                                    <Button onClick={e=>{this.updateRecipe(recipe)}} color="primary" className="button-styling">
                                         Update
                                     </Button>
                                 </DialogActions>   
                                  </Dialog>
                                  {!(recipe.publisher.localeCompare(this.props.currentUser)) ?
-                                 <Button onClick={e=>{this.deleteRecipe(recipe)}} className="add-recipe-button">Delete</Button>
+                                 <Button onClick={e=>{this.deleteRecipe(recipe)}} className="button-styling">Delete</Button>
                                  : ""}
                                  <Snackbar
                                     anchorOrigin={{vertical, horizontal}}
