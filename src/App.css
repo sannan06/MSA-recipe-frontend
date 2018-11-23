@@ -20,15 +20,6 @@ button:focus {
   font-family: "Roboto";
 }
 
-.MuiInputBase-input-28{
-  font-size: 16px !important;
-}
-
-.MuiButton-label-2{
-  font-size: 16px !important;
-  font-weight: 400;
-}
-
 .search-field {
   margin-left: 2rem;
 }
@@ -68,6 +59,7 @@ button:focus {
 
 .add-recipe-button {
   color: white !important;
+  font-size: 16px !important;
 }
 
 .add-recipe-header {
@@ -147,6 +139,7 @@ a {
 
 .login-button {
   margin-left: 30rem !important;
+  font-size: 16px !important;
 }
 
 .facebook-login {
@@ -162,53 +155,4 @@ input[type="file"] {
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px #f3f3f3 inset;
   -webkit-text-fill-color: #2c3e50 !important;
-}
-
-/******** RECIPE.js ********/
-
-.active-recipe {
-  margin: 0 auto;
-  width: 60%;
-}
-
-.active-recipe__img {
-  height: 500px !important;
-}
-
-.active-recipe__title {
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin: 1rem 0;
-}
-
-.active-recipe__publisher, .active-recipe__website {
-  text-transform: uppercase;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.active-recipe__publisher span {
-  text-transform: none;
-  font-weight: 300;
-  letter-spacing: 2px;
-  margin-left: 5px;
-}
-
-.active-recipe__website span {
-  text-transform: lowercase;
-  font-weight: 300;
-  letter-spacing: 2px;
-  color: #e74c3c;
-  margin-left: 10px;
-}
-
-.active-recipe__button {
-  border: solid 2px #e74c3c;
-  background: transparent;
-  padding: 0.2rem 0.9rem;
-  margin: 0 0.2rem;
-  border-radius: 1px;
-  font-size: 1rem;
-  text-transform: uppercase;
-  font-weight: 500;
 }
