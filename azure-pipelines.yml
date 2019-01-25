@@ -6,25 +6,23 @@
 pool:
   vmImage: 'Ubuntu 16.04'
 
+trigger:
+- master
+
 steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
-    
+
 - script: |
     npm install
     npm run build
   displayName: 'npm install and build'
-  
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-    archiveFile: '$(System.DefaultWorkingDirectory)/build.zip' 
-
-
+    includeRootFolder: false
 
 - task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(System.DefaultWorkingDirectory)/build.zip' 
-    artifactName: 'build' 
