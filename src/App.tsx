@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as MaterialDesign from '@material-ui/core';
 import Recipes from './components/Recipes';
 import AddRecipe from './components/AddRecipe';
-import Authentication from './components/Authentication';
 import MediaStreamRecorder from 'msr';
 import './App.css';
 import { Snackbar } from '@material-ui/core';
@@ -13,7 +12,6 @@ interface IState {
   open: boolean,
   vertical: any,
   horizontal: any,
-  authenticated: boolean,
   refCamera: any,
   errorOpen: boolean,
   currentUser: any,
@@ -30,7 +28,6 @@ class App extends React.Component<{}, IState> {
       open: false,
       vertical: 'top',
       horizontal: 'right',
-      authenticated: false,
       refCamera: React.createRef(),
       errorOpen: false,
       currentUser: null,
@@ -38,7 +35,6 @@ class App extends React.Component<{}, IState> {
       failedAuthenticate: false,
     }
     this.getRecipeSearch = this.getRecipeSearch.bind(this)
-    this.allowAccess = this.allowAccess.bind(this)
     this.getRecipes("")
   }
 
@@ -46,12 +42,6 @@ class App extends React.Component<{}, IState> {
     const { vertical, horizontal } = this.state
     return (
       <div className="App">
-
-      {(!this.state.authenticated) ?
-      <Authentication authenticated={this.state.authenticated} refCamera={this.state.refCamera} allowAccess={this.allowAccess}/>
-       : ""}
-
-      {(this.state.authenticated) ?
       <div>
         <Snackbar
           anchorOrigin={{vertical, horizontal}}
@@ -95,7 +85,6 @@ class App extends React.Component<{}, IState> {
         </form>
         <Recipes recipes={this.state.recipes} currentUser={this.state.currentUser} getRecipes={this.getRecipes}/>
       </div>
-          : "" }	 
       </div>
     );
   }
@@ -213,15 +202,6 @@ class App extends React.Component<{}, IState> {
       errorOpen: false,
       openWelcome: false,
      })
-  }
-
-  // Authenticate and allow access
-  private allowAccess(CR: any) {
-    this.setState({
-      authenticated: true,
-      currentUser: CR,
-      openWelcome: true
-    })
   }
 
 }
